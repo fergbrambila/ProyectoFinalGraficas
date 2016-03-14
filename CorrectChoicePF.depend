@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1457996608 source:c:\users\bramb\documents\glut\correctchoicepf\main.cpp
+	<windows.h>
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<string>
+
+1453313073 c:\users\bramb\downloads\glut\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
