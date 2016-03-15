@@ -14,6 +14,8 @@ int screenHeight = 600;
 bool jugar = false;
 bool instrucciones = false;
 bool menu = true;
+bool juegoMaria = false;
+bool juegoJuan = false;
 
 void reshape(int width, int height){
     screenHeight = height;
@@ -105,6 +107,13 @@ void display(){
         drawString(-65,-45,"Maria", 10, 10);
         drawString(35,-45,"Juan", 10, 10);
         drawString(-20,-93,"Atras", 10, 10);
+
+        if (juegoMaria){
+            drawString(-79,-15,"Seleccionada", 10, 10);
+        }
+        else if (juegoJuan){
+            drawString(20,-15,"Seleccionado", 10, 10);
+        }
     }
     else if (instrucciones) {
         glColor3f (1.0,0.5,0.5);
@@ -156,7 +165,9 @@ void keyboard(unsigned char key, int x, int y){
 
 void myMouse(int button, int state, int x, int y)
 {
+    x = screenWidth-x;
     y = screenHeight-y;
+
     if(menu){
         if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON)//boton izquierdo presionado
         {
@@ -184,6 +195,18 @@ void myMouse(int button, int state, int x, int y)
                 jugar = false;
                 instrucciones = false;
                 menu = true;
+                juegoMaria = false;
+                juegoJuan = false;
+            }
+            else if (y <= screenHeight-screenHeight*.2 && y >= screenHeight - screenHeight*.65){
+                if (x >= screenWidth - screenWidth*.45 && x <= screenWidth - screenWidth*.1){
+                    juegoMaria = true;
+                    juegoJuan = false;
+                }
+                else if (x >= screenWidth - screenWidth*.9 && x <= screenWidth - screenWidth*.55){
+                    juegoMaria = false;
+                    juegoJuan = true;
+                }
             }
         }
     }else if(instrucciones){
