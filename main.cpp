@@ -11,11 +11,15 @@ using namespace std;
 
 int screenWidth = 600;
 int screenHeight = 600;
-bool jugar = false;
+bool elegirPersonaje = false;
 bool instrucciones = false;
 bool menu = true;
+bool elegirNivel = false;
+bool jugar = false;
 bool juegoMaria = false;
 bool juegoJuan = false;
+int personaje = -1;
+int nivel = -1;
 
 void reshape(int width, int height){
     screenHeight = height;
@@ -51,7 +55,6 @@ void display(){
         glVertex2d(100, -25);
         glVertex2d(100, 0);
 
-
         glColor3f (1.0,1,0.5);
 
         glVertex2d(-100, -30);
@@ -77,7 +80,7 @@ void display(){
         drawString(-20,-45,"Instrucciones", 12, 12);
         drawString(-15,-75,"Salir", 12, 12);
     }
-    else if(jugar) {
+    else if(elegirPersonaje) {
         glColor3f (1.0,0.5,0.5);
         glBegin(GL_QUADS);
 
@@ -114,19 +117,98 @@ void display(){
         else if (juegoJuan){
             drawString(20,-15,"Seleccionado", 10, 10);
         }
+
+        if(juegoJuan || juegoMaria){
+            glColor3f (0.5,1.0,0.5);
+            glBegin(GL_QUADS);
+
+            glVertex2d(-100, -60);
+            glVertex2d(-100, -75);
+            glVertex2d(100, -75);
+            glVertex2d(100, -60);
+
+            glEnd();
+
+            glColor3f (0.0,0.0,0.0);
+            drawString(-20,-73,"Seguir", 10, 10);
+        }
     }
     else if (instrucciones) {
         glColor3f (1.0,0.5,0.5);
         glBegin(GL_QUADS);
+
         glVertex2d(-100, -80);
         glVertex2d(-100, -95);
         glVertex2d(100, -95);
         glVertex2d(100, -80);
+
         glEnd();
 
         glColor3f (0.0,0.0,0.0);
         drawString(-70,75,"Instrucciones", 6, 6);
         drawString(-20,-93,"Atras", 10, 10);
+    }
+    else if (elegirNivel){
+        glColor3f (1.0,0.5,0.5);
+
+        glBegin(GL_QUADS);
+
+        glVertex2d(-100, -80);
+        glVertex2d(-100, -95);
+        glVertex2d(100, -95);
+        glVertex2d(100, -80);
+
+        glColor3f (1.0,1,0.5);
+
+        glVertex2d(-100, 50);
+        glVertex2d(-100, 25);
+        glVertex2d(100, 25);
+        glVertex2d(100, 50);
+
+        glVertex2d(-100, 20);
+        glVertex2d(-100, -5);
+        glVertex2d(100, -5);
+        glVertex2d(100, 20);
+
+        glVertex2d(-100, -10);
+        glVertex2d(-100, -35);
+        glVertex2d(100, -35);
+        glVertex2d(100, -10);
+
+        glEnd();
+
+        glColor3f (0.0,0.0,0.0);
+
+        drawString(-70,75,"Elegir Nivel", 6, 6);
+        drawString(-97,51,"Numero Nivel", 15, 15);
+        drawString(50,51,"Porcentaje", 15, 15);
+        drawString(-95,33,"1er Nivel", 10, 10);
+        drawString(50,33,"Incompleto", 15, 15);
+        drawString(-95,3,"2ndo Nivel", 10, 10);
+        drawString(50,3,"Incompleto", 15, 15);
+        drawString(-95,-27,"3er Nivel", 10, 10);
+        drawString(50,-27,"Incompleto", 15, 15);
+        drawString(-20,-93,"Atras", 10, 10);
+
+        drawString(-30,-53,"Nivel: ", 10, 10);
+
+
+        if (nivel > 0){
+            glColor3f (0.5,1.0,0.5);
+            glBegin(GL_QUADS);
+
+            glVertex2d(-100, -60);
+            glVertex2d(-100, -75);
+            glVertex2d(100, -75);
+            glVertex2d(100, -60);
+
+            glEnd();
+
+            glColor3f (0.0,0.0,0.0);
+            drawString(-20,-73,"Seguir", 10, 10);
+        }
+    } else if(jugar) {
+        drawString(-70,75,"Jugar", 6, 6);
     }
 
     glutSwapBuffers();
@@ -173,12 +255,12 @@ void myMouse(int button, int state, int x, int y)
         {
             if(y <= screenHeight/2 && y >= screenHeight/2 - screenHeight/2*.25) //click dentro del rango de 1/5 de la pantalla
             {
-                jugar = true;
+                elegirPersonaje = true;
                 instrucciones = false;
                 menu = false;
             }
             else if (y <= screenHeight/2 - screenHeight/2*.3 && y >= screenHeight/2 - screenHeight/2*.55){
-                jugar = false;
+                elegirPersonaje = false;
                 instrucciones = true;
                 menu = false;
             }
@@ -187,25 +269,37 @@ void myMouse(int button, int state, int x, int y)
             }
         }
     }
-    else if (jugar){
+    else if (elegirPersonaje){
         if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON)//boton izquierdo presionado
         {
-            if(y <= screenHeight/2 - screenHeight/2*.8   && y >= screenHeight/2 - screenHeight/2*.95) //click dentro del rango de 1/5 de la pantalla
+            if(y <= screenHeight/2 - screenHeight/2*.8   && y >= screenHeight/2 - screenHeight/2*.95)
             {
-                jugar = false;
+                elegirPersonaje = false;
                 instrucciones = false;
                 menu = true;
                 juegoMaria = false;
                 juegoJuan = false;
+                personaje = -1;
             }
             else if (y <= screenHeight-screenHeight*.2 && y >= screenHeight - screenHeight*.65){
                 if (x >= screenWidth - screenWidth*.45 && x <= screenWidth - screenWidth*.1){
                     juegoMaria = true;
                     juegoJuan = false;
+                    personaje = 1; //personaje es MUJEr
                 }
                 else if (x >= screenWidth - screenWidth*.9 && x <= screenWidth - screenWidth*.55){
                     juegoMaria = false;
                     juegoJuan = true;
+                    personaje = 0; //personaje es HOMBRE
+                } else {
+                    juegoJuan = false;
+                    juegoMaria = false;
+                }
+            }
+            if(juegoJuan || juegoMaria){
+                if(y <= screenHeight/2 - screenHeight/2*.6   && y >= screenHeight/2 - screenHeight/2*.75) { //SEGUIR
+                        elegirNivel = true;
+                        elegirPersonaje = false;
                 }
             }
         }
@@ -214,12 +308,32 @@ void myMouse(int button, int state, int x, int y)
         {
             if(y <= screenHeight/2 - screenHeight/2*.8   && y >= screenHeight/2 - screenHeight/2*.95) //click dentro del rango de 1/5 de la pantalla
             {
-                jugar = false;
+                elegirPersonaje = false;
                 instrucciones = false;
                 menu = true;
             }
         }
 
+    } else if (elegirNivel) {
+        if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON)//boton izquierdo presionado
+        {
+            if(y <= screenHeight-screenHeight*.25 && y >= screenHeight - screenHeight*.375){
+                nivel=1;
+            }else if(y <= screenHeight-screenHeight*.4 && y >= screenHeight - screenHeight*.525){
+                nivel=2;
+            }else if(y <= screenHeight-screenHeight*.55 && y >= screenHeight - screenHeight*.675){
+                nivel=2;
+            }else if(y <= screenHeight/2 - screenHeight/2*.8   && y >= screenHeight/2 - screenHeight/2*.95) {
+                elegirNivel = false;
+                elegirPersonaje = true;
+                nivel = -1;
+            }else if(nivel > 0 && y <= screenHeight/2 - screenHeight/2*.6   && y >= screenHeight/2 - screenHeight/2*.75){ //SEGUIR
+                    elegirNivel = false;
+                    jugar = true;
+            }else{
+                nivel = -1;
+            }
+        }
     }
 
     display();
